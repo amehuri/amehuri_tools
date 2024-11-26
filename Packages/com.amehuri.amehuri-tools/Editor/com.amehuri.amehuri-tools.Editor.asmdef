@@ -1,0 +1,27 @@
+{
+    "name": "com.amehuri.amehuri-tools.Editor",
+    "rootNamespace": "",
+    "references": [
+        "VRC.SDK3A",
+        "VRC.SDK3A.Editor",
+        "VRC.SDKBase",
+        "VRC.SDKBase.Editor",
+        "com.amehuri.amehuri-tools",
+        "nadena.dev.ndmf",
+        "nadena.dev.modular-avatar.core",
+        "nadena.dev.modular-avatar.core.editor",
+        "nadena.dev.modular-avatar.harmony-patches",
+        "nadena.dev.modular-avatar.param-introspection",
+        "nadena.dev.ndmf.runtime",
+        "nadena.dev.ndmf.vrchat"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
