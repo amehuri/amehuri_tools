@@ -1,10 +1,9 @@
 # 🧰Amehuri Tools
-雨降りの制作したUnity用Editor拡張たちを置いておくところです。
+雨降りの制作したUnity用Editor拡張たちを置いておくところです。  
 詳細は各ツールのマニュアルにて。  
   
-**📥VCC導入用リンクはこちら↓**  
-https://amehuri.github.io/amehuri_tools/
-
+**📥VCC導入用リンクはこちら👇**  
+https://amehuri.github.io/amehuri_tools/  
   
 ## 🗃️入っているもの
 ### ・PhysBoneを間引くやつ
