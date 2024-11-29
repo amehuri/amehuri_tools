@@ -1,7 +1,7 @@
 {
   "name": "com.amehuri.amehuri-tools",
   "displayName": "Amehuri Tools",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "\u96e8\u964d\u308a\u306e\u5236\u4f5c\u3057\u305f\u30c4\u30fc\u30eb\u7f6e\u304d\u5834",
   "gitDependencies": {},
   "vpmDependencies": {
