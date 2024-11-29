@@ -11,8 +11,14 @@
     "name": "amehuri",
     "email": "amehuri0906@gmail.com"
   },
-  "legacyFolders": {},
-  "legacyFiles": {},
-  "localPath": "C:\\Users\\amehu\\Documents\\GitHub\\amehuri_tools\\Packages\\com.amehuri.amehuri-tools",
+  "legacyFolders": {
+    "Assets\\VRCLensForMA\\Editor" : ""
+    "Assets\\VRCLensForMA\\VRCLensForMA_Base" : ""
+  },
+  "legacyFiles": {
+    "Assets\\Amehuri_Tools\\Editor\\ThinningOutPhysBones.cs": ""
+    "Assets\\VRCLensForMA\\ReadMe.txt" : ""
+    "Assets\\VRCLensForMA\\VRCLens_ForMA.prefab" : ""
+  },
   "unity": "2022.3"
 }
