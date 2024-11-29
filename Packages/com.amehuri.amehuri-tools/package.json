@@ -1,20 +1,18 @@
 {
   "name": "com.amehuri.amehuri-tools",
   "displayName": "Amehuri Tools",
-  "version": "0.0.4",
-  "description": "\u96e8\u964d\u308a\u306e\u30c4\u30fc\u30eb\u8a70\u3081\u5408\u308f\u305b\u4e88\u5b9a\u5730",
+  "version": "0.1.0",
+  "description": "\u96e8\u964d\u308a\u306e\u5236\u4f5c\u3057\u305f\u30c4\u30fc\u30eb\u7f6e\u304d\u5834",
   "gitDependencies": {},
   "vpmDependencies": {
     "com.vrchat.avatars": "3.7.4"
   },
   "author": {
     "name": "amehuri",
-    "email": "amehuri0906@gmail.com",
-    "url": ""
+    "email": "amehuri0906@gmail.com"
   },
   "legacyFolders": {},
-  "legacyFiles": {
-    "Assets\\Amehuri_Tools\\Editor\\ThinningOutPhysBones.cs": ""
-  },
+  "legacyFiles": {},
+  "localPath": "C:\\Users\\amehu\\Documents\\GitHub\\amehuri_tools\\Packages\\com.amehuri.amehuri-tools",
   "unity": "2022.3"
 }

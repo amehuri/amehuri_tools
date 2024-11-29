@@ -2,6 +2,8 @@
     "name": "com.amehuri.amehuri-tools.Editor",
     "rootNamespace": "",
     "references": [
+        "VRC.SDK3A",
+        "VRC.SDK3A.Editor",
         "VRC.SDKBase",
         "VRC.SDKBase.Editor",
         "com.amehuri.amehuri-tools",
@@ -14,7 +16,7 @@
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
-    "autoReferenced": true,
+    "autoReferenced": false,
     "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false
