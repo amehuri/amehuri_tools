@@ -18,4 +18,10 @@ UIが若干変わりましたが、処理内容は同一（のはず）なので
 新規にツールを使用する場合、[Tools/AmehuriTools/VRCLensをMAで導入するやつ]からウィンドウを起動してください。
   
 **🐫BOOTHページリンク**  
-https://it-was-rainy.booth.pm/items/4885661
+https://it-was-rainy.booth.pm/items/4885661  
+
+  
+## 📄ライセンス
+　**Copyright (c) 2024 amehuri**  
+　Released under the MIT license  
+　https://opensource.org/licenses/mit-license.php
