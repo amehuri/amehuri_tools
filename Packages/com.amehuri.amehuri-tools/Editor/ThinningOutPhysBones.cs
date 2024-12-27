@@ -335,7 +335,7 @@ public class ThinningOutPhysBones : EditorWindow
 
                 if(PBrootObjects.Length == 1)
                 {
-                    pbParent.GetComponent<VRCPhysBone>().rootTransform = subList.First().transform;
+                    pbParent.GetComponent<VRCPhysBone>().rootTransform = pbParent.transform.GetChild(0);
                 }
                 else
                 {
