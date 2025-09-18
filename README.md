@@ -19,7 +19,11 @@ UIが若干変わりましたが、処理内容は同一（のはず）なので
   
 **🐫BOOTHページリンク**  
 https://it-was-rainy.booth.pm/items/4885661  
+### ・AnimatorControllerの中にあるAnimationClipを一覧するやつ（ver 0.2.0以降）
+指定AnimatorControllerで使用されているAnimationClipを一覧し、一括で置き換えます。  
+一覧表示の際、Layer・StateMachine・BlendTreeごとに階層化され、StateMachineとStateは名前でソートされます。  
 
+（AIでざっくり作ったので動作保証はあんまりできません。導入するだけでプロジェクトが壊れるようなことはないと思いますが念のため。）
   
 ## 📄ライセンス
 　**Copyright (c) 2024 amehuri**  
