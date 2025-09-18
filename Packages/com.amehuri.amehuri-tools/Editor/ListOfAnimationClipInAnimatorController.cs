@@ -93,6 +93,8 @@ public class AnimatorControllerTreeViewWindow : EditorWindow
             EditorGUILayout.EndScrollView();
         }
     }
+
+    // AnimatorController内の全Clipを収集（サブステートマシンも含む）
     private List<AnimationClip> GetAllClips(AnimatorController controller)
     {
         var clips = new HashSet<AnimationClip>();
@@ -102,7 +104,6 @@ public class AnimatorControllerTreeViewWindow : EditorWindow
         }
         return new List<AnimationClip>(clips);
     }
-
     // サブステートマシンも含めて再帰的にClipを収集
     private void CollectClipsRecursive(AnimatorStateMachine sm, HashSet<AnimationClip> clips)
     {
@@ -110,10 +111,23 @@ public class AnimatorControllerTreeViewWindow : EditorWindow
         {
             if (state.state.motion is AnimationClip clip)
                 clips.Add(clip);
+            else if (state.state.motion is BlendTree blendTree)
+                CollectClipsFromBlendTree(blendTree, clips);
         }
         foreach (var subSm in sm.stateMachines)
         {
             CollectClipsRecursive(subSm.stateMachine, clips);
+        }
+    }
+    // BlendTree内のClipを再帰的に収集
+    private void CollectClipsFromBlendTree(BlendTree blendTree, HashSet<AnimationClip> clips)
+    {
+        foreach (var child in blendTree.children)
+        {
+            if (child.motion is AnimationClip clip)
+                clips.Add(clip);
+            else if (child.motion is BlendTree childTree)
+                CollectClipsFromBlendTree(childTree, clips);
         }
     }
 
@@ -128,8 +142,6 @@ public class AnimatorControllerTreeViewWindow : EditorWindow
         EditorUtility.SetDirty(controller);
         AssetDatabase.SaveAssets();
     }
-
-    // サブステートマシンも含めて再帰的にClipを置き換え
     private void ReplaceClipsRecursive(AnimatorStateMachine sm, AnimationClip target, AnimationClip replaceWith)
     {
         foreach (var state in sm.states)
@@ -139,10 +151,31 @@ public class AnimatorControllerTreeViewWindow : EditorWindow
                 state.state.motion = replaceWith;
                 EditorUtility.SetDirty(state.state);
             }
+            else if (state.state.motion is BlendTree blendTree)
+            {
+                ReplaceClipsInBlendTree(blendTree, target, replaceWith);
+            }
         }
         foreach (var subSm in sm.stateMachines)
         {
             ReplaceClipsRecursive(subSm.stateMachine, target, replaceWith);
+        }
+    }
+    // BlendTree内のClip置き換え
+    private void ReplaceClipsInBlendTree(BlendTree blendTree, AnimationClip target, AnimationClip replaceWith)
+    {
+        for (int i = 0; i < blendTree.children.Length; i++)
+        {
+            var child = blendTree.children[i];
+            if (child.motion == target)
+            {
+                blendTree.children[i].motion = replaceWith;
+                EditorUtility.SetDirty(blendTree);
+            }
+            else if (child.motion is BlendTree childTree)
+            {
+                ReplaceClipsInBlendTree(childTree, target, replaceWith);
+            }
         }
     }
 }
@@ -189,21 +222,47 @@ public class AnimatorControllerTreeView : TreeView
         var smItem = new AnimatorTreeItem(id++, depth, sm.name, AnimatorTreeItem.ItemType.StateMachine, null);
         parent.AddChild(smItem);
 
-        // States を自然順にソート
         var states = new List<ChildAnimatorState>(sm.states);
         states.Sort((a, b) => EditorUtility.NaturalCompare(a.state.name, b.state.name));
         foreach (var state in states)
         {
-            var stItem = new AnimatorTreeItem(id++, depth + 1, state.state.name, AnimatorTreeItem.ItemType.State, state.state.motion as AnimationClip, state.state);
-            smItem.AddChild(stItem);
+            if (state.state.motion is BlendTree blendTree)
+            {
+                var blendTreeItem = new AnimatorTreeItem(id++, depth + 1, state.state.name + " (BlendTree)", AnimatorTreeItem.ItemType.BlendTree, null, state.state);
+                smItem.AddChild(blendTreeItem);
+                AddBlendTree(blendTreeItem, blendTree, ref id, depth + 2);
+            }
+            else
+            {
+                var stItem = new AnimatorTreeItem(id++, depth + 1, state.state.name, AnimatorTreeItem.ItemType.State, state.state.motion as AnimationClip, state.state);
+                smItem.AddChild(stItem);
+            }
         }
 
-        // SubStateMachines を自然順にソート
         var subMachines = new List<ChildAnimatorStateMachine>(sm.stateMachines);
         subMachines.Sort((a, b) => EditorUtility.NaturalCompare(a.stateMachine.name, b.stateMachine.name));
         foreach (var sub in subMachines)
         {
             AddStateMachine(smItem, sub.stateMachine, ref id, depth + 1);
+        }
+    }
+
+    // BlendTreeノード追加
+    private void AddBlendTree(TreeViewItem parent, BlendTree blendTree, ref int id, int depth)
+    {
+        foreach (var child in blendTree.children)
+        {
+            if (child.motion is AnimationClip clip)
+            {
+                var clipItem = new AnimatorTreeItem(id++, depth, clip.name, AnimatorTreeItem.ItemType.State, clip, null);
+                parent.AddChild(clipItem);
+            }
+            else if (child.motion is BlendTree childTree)
+            {
+                var blendTreeItem = new AnimatorTreeItem(id++, depth, childTree.name + " (BlendTree)", AnimatorTreeItem.ItemType.BlendTree, null, null);
+                parent.AddChild(blendTreeItem);
+                AddBlendTree(blendTreeItem, childTree, ref id, depth + 1);
+            }
         }
     }
 
@@ -213,53 +272,43 @@ public class AnimatorControllerTreeView : TreeView
         var item = (AnimatorTreeItem)args.item;
         Rect rowRect = args.rowRect;
 
-        // 選択行ハイライト
         if (args.selected)
             EditorGUI.DrawRect(rowRect, new Color(0.24f, 0.48f, 0.90f, 0.3f));
 
-        // アイコン
         Texture icon = null;
         switch (item.Type)
         {
             case AnimatorTreeItem.ItemType.Layer: icon = EditorGUIUtility.IconContent("AnimatorController Icon").image; break;
             case AnimatorTreeItem.ItemType.StateMachine: icon = EditorGUIUtility.IconContent("Folder Icon").image; break;
             case AnimatorTreeItem.ItemType.State: icon = EditorGUIUtility.IconContent("AnimationClip Icon").image; break;
+            case AnimatorTreeItem.ItemType.BlendTree: icon = EditorGUIUtility.IconContent("BlendTree Icon").image; break;
         }
         var iconRect = rowRect;
         iconRect.x += GetContentIndent(item);
         iconRect.width = rowRect.height;
         if (icon != null) GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit);
 
-        // ラベル
         var labelRect = rowRect;
         labelRect.xMin += GetContentIndent(item) + 20;
         EditorGUI.LabelField(labelRect, item.displayName);
 
-        // State Clip ObjectField (差し替え可能)
-        if (item.Type == AnimatorTreeItem.ItemType.State && item.StateRef != null)
+        // BlendTreeノードは編集不可
+        if (item.Type == AnimatorTreeItem.ItemType.State && item.Clip != null)
         {
             var clipRect = rowRect;
-            clipRect.xMin = rowRect.xMax - 300; // 幅調整
+            clipRect.xMin = rowRect.xMax - 300;
 
-            // 現在の背景色を保存
             Color prevColor = GUI.backgroundColor;
-
-            // 変更済みなら黄色
             GUI.backgroundColor = modifiedClips.ContainsKey(item.id) ? Color.green : Color.white;
 
-            // ObjectField描画
             AnimationClip newClip = (AnimationClip)EditorGUI.ObjectField(clipRect, item.Clip, typeof(AnimationClip), false);
             if (newClip != item.Clip)
             {
                 item.Clip = newClip;
                 modifiedClips[item.id] = newClip;
             }
-
-            // 背景色を元に戻す
             GUI.backgroundColor = prevColor;
         }
-
-
     }
     
 
@@ -302,10 +351,10 @@ public class AnimatorControllerTreeView : TreeView
 
 public class AnimatorTreeItem : TreeViewItem
 {
-    public enum ItemType { Layer, StateMachine, State }
+    public enum ItemType { Layer, StateMachine, State, BlendTree } // BlendTree追加
     public ItemType Type { get; private set; }
     public AnimationClip Clip { get; set; }
-    public AnimatorState StateRef { get; private set; } // 直接保持
+    public AnimatorState StateRef { get; private set; }
 
     public AnimatorTreeItem(int id, int depth, string name, ItemType type, AnimationClip clip, AnimatorState stateRef = null) : base(id, depth, name)
     {
