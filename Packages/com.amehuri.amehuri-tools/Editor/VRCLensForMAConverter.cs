@@ -186,8 +186,17 @@ namespace vrclensforma
         private void DuplicateFolder()
         {
             string baseFolderPath = AssetDatabase.GUIDToAssetPath("50759b10610ee2d4fbb63559c67d467f");
-            newFolderPath = "Assets/VRCLensForMA/VRCLensForMA_" + avatar.name;
-            AssetDatabase.CopyAsset(baseFolderPath, newFolderPath);
+            string parentFolder = "Assets/VRCLensForMA";
+            if (!AssetDatabase.IsValidFolder(parentFolder))
+            {
+                AssetDatabase.CreateFolder("Assets", "VRCLensForMA");
+            }
+            newFolderPath = parentFolder + "/VRCLensForMA_" + avatar.name;
+            bool success = AssetDatabase.CopyAsset(baseFolderPath, newFolderPath);
+            if (!success)
+            {
+                Debug.LogError("[VRCLensForMA] Failed to duplicate Base folder.");
+            }
 
         }
         //Prefabをインスタンス化して配置
