@@ -1,7 +1,7 @@
 {
   "name": "com.amehuri.amehuri-tools",
   "displayName": "Amehuri Tools",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "\u96e8\u964d\u308a\u306e\u5236\u4f5c\u3057\u305f\u30c4\u30fc\u30eb\u7f6e\u304d\u5834",
   "gitDependencies": {},
   "vpmDependencies": {
@@ -13,13 +13,13 @@
     "email": "amehuri0906@gmail.com"
   },
   "legacyFolders": {
-    "Assets\\VRCLensForMA\\Editor" : "",
-    "Assets\\VRCLensForMA\\VRCLensForMA_Base" : ""
+    "Assets\\VRCLensForMA\\Editor": "",
+    "Assets\\VRCLensForMA\\VRCLensForMA_Base": ""
   },
   "legacyFiles": {
     "Assets\\Amehuri_Tools\\Editor\\ThinningOutPhysBones.cs": "",
-    "Assets\\VRCLensForMA\\ReadMe.txt" : "",
-    "Assets\\VRCLensForMA\\VRCLens_ForMA.prefab" : ""
+    "Assets\\VRCLensForMA\\ReadMe.txt": "",
+    "Assets\\VRCLensForMA\\VRCLens_ForMA.prefab": ""
   },
   "unity": "2022.3"
 }
